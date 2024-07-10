@@ -1,0 +1,11 @@
+import React, { FC } from 'react';
+
+interface AppProps {
+  elem: HTMLElement;
+}
+
+const App: FC<AppProps> = ({ elem }) => {
+  return <h1>Your new Component <i>{{name}}</i> is here.</h1>;
+};
+
+export default App;
