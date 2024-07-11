@@ -1,4 +1,4 @@
-// const {Compilation} = require('webpack');
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -68,7 +68,7 @@ module.exports = {
     obj[compName] = el;
     return obj;
   }, {}),
-  devtool: 'inline-source-map',
+  devtool: false,
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name]/[name].js',
@@ -101,6 +101,19 @@ module.exports = {
     //   template: 'static/index.html', // create a template to start from
     // }),
     new CopyFiles(),
+    new webpack.BannerPlugin({
+      banner: opt => {
+        // console.log('yourVariable ==', opt.filename);
+        if (opt.filename.endsWith('.css')) {
+          return '/* stylelint-disable */';
+        }
+        if (opt.filename.endsWith('.js')) {
+          return '/* eslint-disable */';
+        }
+      },
+      raw: true,
+      stage: webpack.Compilation.PROCESS_ASSETS_STAGE_REPORT,
+    }),
   ],
   resolve: {
     extensions: ['.js', '.jsx', '.tsx', '.ts'],

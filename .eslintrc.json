@@ -30,6 +30,7 @@
     }
   },
   "rules": {
+    "import/extensions": "off",
     "no-plusplus": "off",
     "curly": 1,
     "consistent-return": 0,

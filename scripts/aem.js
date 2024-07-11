@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /*
  * Copyright 2024 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -22,14 +23,15 @@
  * for instance the href of a link, or a search term
  */
 function sampleRUM(checkpoint, data = {}) {
-  sampleRUM.baseURL = sampleRUM.baseURL || new URL(window.RUM_BASE == null ? 'https://rum.hlx.page' : window.RUM_BASE, window.location);
+  sampleRUM.baseURL =
+    sampleRUM.baseURL || new URL(window.RUM_BASE == null ? 'https://rum.hlx.page' : window.RUM_BASE, window.location);
   sampleRUM.defer = sampleRUM.defer || [];
-  const defer = (fnname) => {
-    sampleRUM[fnname] = sampleRUM[fnname]
-      || ((...args) => sampleRUM.defer.push({ fnname, args }));
+  const defer = fnname => {
+    sampleRUM[fnname] = sampleRUM[fnname] || ((...args) => sampleRUM.defer.push({ fnname, args }));
   };
-  sampleRUM.drain = sampleRUM.drain
-    || ((dfnname, fn) => {
+  sampleRUM.drain =
+    sampleRUM.drain ||
+    ((dfnname, fn) => {
       sampleRUM[dfnname] = fn;
       sampleRUM.defer
         .filter(({ fnname }) => dfnname === fnname)
@@ -48,10 +50,10 @@ function sampleRUM(checkpoint, data = {}) {
     window.hlx = window.hlx || {};
     if (!window.hlx.rum) {
       const usp = new URLSearchParams(window.location.search);
-      const weight = (usp.get('rum') === 'on') ? 1 : 100; // with parameter, weight is 1. Defaults to 100.
+      const weight = usp.get('rum') === 'on' ? 1 : 100; // with parameter, weight is 1. Defaults to 100.
       const id = Math.random().toString(36).slice(-4);
       const random = Math.random();
-      const isSelected = (random * weight < 1);
+      const isSelected = random * weight < 1;
       const firstReadTime = window.performance ? window.performance.timeOrigin : Date.now();
       const urlSanitizers = {
         full: () => window.location.href,
@@ -59,17 +61,42 @@ function sampleRUM(checkpoint, data = {}) {
         path: () => window.location.href.replace(/\?.*$/, ''),
       };
       // eslint-disable-next-line object-curly-newline, max-len
-      window.hlx.rum = { weight, id, random, isSelected, firstReadTime, sampleRUM, sanitizeURL: urlSanitizers[window.hlx.RUM_MASK_URL || 'path'] };
+      window.hlx.rum = {
+        weight,
+        id,
+        random,
+        isSelected,
+        firstReadTime,
+        sampleRUM,
+        sanitizeURL: urlSanitizers[window.hlx.RUM_MASK_URL || 'path'],
+      };
     }
 
     const { weight, id, firstReadTime } = window.hlx.rum;
     if (window.hlx && window.hlx.rum && window.hlx.rum.isSelected) {
-      const knownProperties = ['weight', 'id', 'referer', 'checkpoint', 't', 'source', 'target', 'cwv', 'CLS', 'FID', 'LCP', 'INP', 'TTFB'];
+      const knownProperties = [
+        'weight',
+        'id',
+        'referer',
+        'checkpoint',
+        't',
+        'source',
+        'target',
+        'cwv',
+        'CLS',
+        'FID',
+        'LCP',
+        'INP',
+        'TTFB',
+      ];
       const sendPing = (pdata = data) => {
         // eslint-disable-next-line max-len
-        const t = Math.round(window.performance ? window.performance.now() : (Date.now() - firstReadTime));
+        const t = Math.round(window.performance ? window.performance.now() : Date.now() - firstReadTime);
         // eslint-disable-next-line object-curly-newline, max-len, no-use-before-define
-        const body = JSON.stringify({ weight, id, referer: window.hlx.rum.sanitizeURL(), checkpoint, t, ...data }, knownProperties);
+        const body = JSON.stringify(
+          { weight, id, referer: window.hlx.rum.sanitizeURL(), checkpoint, t, ...data },
+          knownProperties
+        );
         const url = new URL(`.rum/${weight}`, sampleRUM.baseURL).href;
         navigator.sendBeacon(url, body);
         // eslint-disable-next-line no-console
@@ -128,11 +155,11 @@ function init() {
 
   window.addEventListener('load', () => sampleRUM('load'));
 
-  window.addEventListener('unhandledrejection', (event) => {
+  window.addEventListener('unhandledrejection', event => {
     sampleRUM('error', { source: event.reason.sourceURL, target: event.reason.line });
   });
 
-  window.addEventListener('error', (event) => {
+  window.addEventListener('error', event => {
     sampleRUM('error', { source: event.filename, target: event.lineno });
   });
 }
@@ -145,10 +172,10 @@ function init() {
 function toClassName(name) {
   return typeof name === 'string'
     ? name
-      .toLowerCase()
-      .replace(/[^0-9a-z]/gi, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '')
+        .toLowerCase()
+        .replace(/[^0-9a-z]/gi, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '')
     : '';
 }
 
@@ -158,7 +185,7 @@ function toClassName(name) {
  * @returns {string} The camelCased name
  */
 function toCamelCase(name) {
-  return toClassName(name).replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+  return toClassName(name).replace(/-([a-z])/g, g => g[1].toUpperCase());
 }
 
 /**
@@ -169,7 +196,7 @@ function toCamelCase(name) {
 // eslint-disable-next-line import/prefer-default-export
 function readBlockConfig(block) {
   const config = {};
-  block.querySelectorAll(':scope > div').forEach((row) => {
+  block.querySelectorAll(':scope > div').forEach(row => {
     if (row.children) {
       const cols = [...row.children];
       if (cols[1]) {
@@ -181,21 +208,21 @@ function readBlockConfig(block) {
           if (as.length === 1) {
             value = as[0].href;
           } else {
-            value = as.map((a) => a.href);
+            value = as.map(a => a.href);
           }
         } else if (col.querySelector('img')) {
           const imgs = [...col.querySelectorAll('img')];
           if (imgs.length === 1) {
             value = imgs[0].src;
           } else {
-            value = imgs.map((img) => img.src);
+            value = imgs.map(img => img.src);
           }
         } else if (col.querySelector('p')) {
           const ps = [...col.querySelectorAll('p')];
           if (ps.length === 1) {
             value = ps[0].textContent;
           } else {
-            value = ps.map((p) => p.textContent);
+            value = ps.map(p => p.textContent);
           }
         } else value = row.children[1].textContent;
         config[name] = value;
@@ -257,9 +284,7 @@ async function loadScript(src, attrs) {
  */
 function getMetadata(name, doc = document) {
   const attr = name && name.includes(':') ? 'property' : 'name';
-  const meta = [...doc.head.querySelectorAll(`meta[${attr}="${name}"]`)]
-    .map((m) => m.content)
-    .join(', ');
+  const meta = [...doc.head.querySelectorAll(`meta[${attr}="${name}"]`)].map(m => m.content).join(', ');
   return meta || '';
 }
 
@@ -275,7 +300,7 @@ function createOptimizedPicture(
   src,
   alt = '',
   eager = false,
-  breakpoints = [{ media: '(min-width: 600px)', width: '2000' }, { width: '750' }],
+  breakpoints = [{ media: '(min-width: 600px)', width: '2000' }, { width: '750' }]
 ) {
   const url = new URL(src, window.location.href);
   const picture = document.createElement('picture');
@@ -283,7 +308,7 @@ function createOptimizedPicture(
   const ext = pathname.substring(pathname.lastIndexOf('.') + 1);
 
   // webp
-  breakpoints.forEach((br) => {
+  breakpoints.forEach(br => {
     const source = document.createElement('source');
     if (br.media) source.setAttribute('media', br.media);
     source.setAttribute('type', 'image/webp');
@@ -315,7 +340,7 @@ function createOptimizedPicture(
  */
 function decorateTemplateAndTheme() {
   const addClasses = (element, classes) => {
-    classes.split(',').forEach((c) => {
+    classes.split(',').forEach(c => {
       element.classList.add(toClassName(c.trim()));
     });
   };
@@ -330,36 +355,24 @@ function decorateTemplateAndTheme() {
  * @param {Element} block the block element
  */
 function wrapTextNodes(block) {
-  const validWrappers = [
-    'P',
-    'PRE',
-    'UL',
-    'OL',
-    'PICTURE',
-    'TABLE',
-    'H1',
-    'H2',
-    'H3',
-    'H4',
-    'H5',
-    'H6',
-  ];
+  const validWrappers = ['P', 'PRE', 'UL', 'OL', 'PICTURE', 'TABLE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
 
-  const wrap = (el) => {
+  const wrap = el => {
     const wrapper = document.createElement('p');
     wrapper.append(...el.childNodes);
     el.append(wrapper);
   };
 
-  block.querySelectorAll(':scope > div > div').forEach((blockColumn) => {
+  block.querySelectorAll(':scope > div > div').forEach(blockColumn => {
     if (blockColumn.hasChildNodes()) {
-      const hasWrapper = !!blockColumn.firstElementChild
-        && validWrappers.some((tagName) => blockColumn.firstElementChild.tagName === tagName);
+      const hasWrapper =
+        !!blockColumn.firstElementChild &&
+        validWrappers.some(tagName => blockColumn.firstElementChild.tagName === tagName);
       if (!hasWrapper) {
         wrap(blockColumn);
       } else if (
-        blockColumn.firstElementChild.tagName === 'PICTURE'
-        && (blockColumn.children.length > 1 || !!blockColumn.textContent.trim())
+        blockColumn.firstElementChild.tagName === 'PICTURE' &&
+        (blockColumn.children.length > 1 || !!blockColumn.textContent.trim())
       ) {
         wrap(blockColumn);
       }
@@ -372,7 +385,7 @@ function wrapTextNodes(block) {
  * @param {Element} element container element
  */
 function decorateButtons(element) {
-  element.querySelectorAll('a').forEach((a) => {
+  element.querySelectorAll('a').forEach(a => {
     a.title = a.title || a.textContent;
     if (a.href !== a.textContent) {
       const up = a.parentElement;
@@ -383,19 +396,19 @@ function decorateButtons(element) {
           up.classList.add('button-container');
         }
         if (
-          up.childNodes.length === 1
-          && up.tagName === 'STRONG'
-          && twoup.childNodes.length === 1
-          && twoup.tagName === 'P'
+          up.childNodes.length === 1 &&
+          up.tagName === 'STRONG' &&
+          twoup.childNodes.length === 1 &&
+          twoup.tagName === 'P'
         ) {
           a.className = 'button primary';
           twoup.classList.add('button-container');
         }
         if (
-          up.childNodes.length === 1
-          && up.tagName === 'EM'
-          && twoup.childNodes.length === 1
-          && twoup.tagName === 'P'
+          up.childNodes.length === 1 &&
+          up.tagName === 'EM' &&
+          twoup.childNodes.length === 1 &&
+          twoup.tagName === 'P'
         ) {
           a.className = 'button secondary';
           twoup.classList.add('button-container');
@@ -413,7 +426,7 @@ function decorateButtons(element) {
  */
 function decorateIcon(span, prefix = '', alt = '') {
   const iconName = Array.from(span.classList)
-    .find((c) => c.startsWith('icon-'))
+    .find(c => c.startsWith('icon-'))
     .substring(5);
   const img = document.createElement('img');
   img.dataset.iconName = iconName;
@@ -430,7 +443,7 @@ function decorateIcon(span, prefix = '', alt = '') {
  */
 function decorateIcons(element, prefix = '') {
   const icons = [...element.querySelectorAll('span.icon')];
-  icons.forEach((span) => {
+  icons.forEach(span => {
     decorateIcon(span, prefix);
   });
 }
@@ -440,10 +453,10 @@ function decorateIcons(element, prefix = '') {
  * @param {Element} main The container element
  */
 function decorateSections(main) {
-  main.querySelectorAll(':scope > div').forEach((section) => {
+  main.querySelectorAll(':scope > div').forEach(section => {
     const wrappers = [];
     let defaultContent = false;
-    [...section.children].forEach((e) => {
+    [...section.children].forEach(e => {
       if (e.tagName === 'DIV' || !defaultContent) {
         const wrapper = document.createElement('div');
         wrappers.push(wrapper);
@@ -452,7 +465,7 @@ function decorateSections(main) {
       }
       wrappers[wrappers.length - 1].append(e);
     });
-    wrappers.forEach((wrapper) => section.append(wrapper));
+    wrappers.forEach(wrapper => section.append(wrapper));
     section.classList.add('section');
     section.dataset.sectionStatus = 'initialized';
     section.style.display = 'none';
@@ -461,13 +474,13 @@ function decorateSections(main) {
     const sectionMeta = section.querySelector('div.section-metadata');
     if (sectionMeta) {
       const meta = readBlockConfig(sectionMeta);
-      Object.keys(meta).forEach((key) => {
+      Object.keys(meta).forEach(key => {
         if (key === 'style') {
           const styles = meta.style
             .split(',')
-            .filter((style) => style)
-            .map((style) => toClassName(style.trim()));
-          styles.forEach((style) => section.classList.add(style));
+            .filter(style => style)
+            .map(style => toClassName(style.trim()));
+          styles.forEach(style => section.classList.add(style));
         } else {
           section.dataset[toCamelCase(key)] = meta[key];
         }
@@ -486,19 +499,19 @@ function decorateSections(main) {
 async function fetchPlaceholders(prefix = 'default') {
   window.placeholders = window.placeholders || {};
   if (!window.placeholders[prefix]) {
-    window.placeholders[prefix] = new Promise((resolve) => {
+    window.placeholders[prefix] = new Promise(resolve => {
       fetch(`${prefix === 'default' ? '' : prefix}/placeholders.json`)
-        .then((resp) => {
+        .then(resp => {
           if (resp.ok) {
             return resp.json();
           }
           return {};
         })
-        .then((json) => {
+        .then(json => {
           const placeholders = {};
           json.data
-            .filter((placeholder) => placeholder.Key)
-            .forEach((placeholder) => {
+            .filter(placeholder => placeholder.Key)
+            .forEach(placeholder => {
               placeholders[toCamelCase(placeholder.Key)] = placeholder.Text;
             });
           window.placeholders[prefix] = placeholders;
@@ -525,7 +538,7 @@ function updateSectionsStatus(main) {
     const status = section.dataset.sectionStatus;
     if (status !== 'loaded') {
       const loadingBlock = section.querySelector(
-        '.block[data-block-status="initialized"], .block[data-block-status="loading"]',
+        '.block[data-block-status="initialized"], .block[data-block-status="loading"]'
       );
       if (loadingBlock) {
         section.dataset.sectionStatus = 'loading';
@@ -548,12 +561,12 @@ function buildBlock(blockName, content) {
   const blockEl = document.createElement('div');
   // build image block nested div structure
   blockEl.classList.add(blockName);
-  table.forEach((row) => {
+  table.forEach(row => {
     const rowEl = document.createElement('div');
-    row.forEach((col) => {
+    row.forEach(col => {
       const colEl = document.createElement('div');
       const vals = col.elems ? col.elems : [col];
-      vals.forEach((val) => {
+      vals.forEach(val => {
         if (val) {
           if (typeof val === 'string') {
             colEl.innerHTML += val;
@@ -580,12 +593,10 @@ async function loadBlock(block) {
     const { blockName } = block.dataset;
     try {
       const cssLoaded = loadCSS(`${window.hlx.codeBasePath}/blocks/${blockName}/${blockName}.css`);
-      const decorationComplete = new Promise((resolve) => {
+      const decorationComplete = new Promise(resolve => {
         (async () => {
           try {
-            const mod = await import(
-              `${window.hlx.codeBasePath}/blocks/${blockName}/${blockName}.js`
-            );
+            const mod = await import(`${window.hlx.codeBasePath}/blocks/${blockName}/${blockName}.js`);
             if (mod.default) {
               await mod.default(block);
             }
@@ -682,7 +693,7 @@ async function waitForLCP(lcpBlocks) {
   document.body.style.display = null;
   const lcpCandidate = document.querySelector('main img');
 
-  await new Promise((resolve) => {
+  await new Promise(resolve => {
     if (lcpCandidate && !lcpCandidate.complete) {
       lcpCandidate.setAttribute('loading', 'eager');
       lcpCandidate.addEventListener('load', resolve);
