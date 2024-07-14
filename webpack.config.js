@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
@@ -63,7 +64,6 @@ module.exports = {
   entry: glob.sync('./react-app/app/*/*.{jsx,tsx}').reduce(function (obj, el) {
     // extract `component name` from directory path
     const compName = path.parse(el).dir.split('/').pop();
-    console.log('files===>', el, compName);
     // eslint-disable-next-line no-param-reassign
     obj[compName] = el;
     return obj;
@@ -97,13 +97,10 @@ module.exports = {
       filename: '[name]/[name].css',
     }),
     ...multipleHtmlPlugins,
-    // new HtmlWebpackPlugin({
-    //   template: 'static/index.html', // create a template to start from
-    // }),
     new CopyFiles(),
     new webpack.BannerPlugin({
       banner: opt => {
-        // console.log('yourVariable ==', opt.filename);
+        // append messages to JS and CSS file
         if (opt.filename.endsWith('.css')) {
           return '/* stylelint-disable */';
         }

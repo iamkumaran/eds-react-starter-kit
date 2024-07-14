@@ -21,3 +21,14 @@ export const onRender = (selector, callBack) => {
     onElementAvailable(selector, callBack);
   }
 };
+
+export const getCall = async (url, opt = {}) => {
+  try {
+    const response = await fetch(url, opt);
+    return await response.json();
+  } catch (error) {
+    return {
+      error,
+    };
+  }
+};
