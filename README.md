@@ -57,7 +57,7 @@ npm run add <component-name>
 eg, `npm run add address-form`
 
 
- - <component-name> - should be same as `block` name.
+ - `component-name` - should be same as `block` name.
 
 
 ## Supports
