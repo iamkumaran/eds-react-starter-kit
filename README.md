@@ -24,3 +24,44 @@ npm run lint
 1. Install the [AEM CLI](https://github.com/adobe/helix-cli): `npm install -g @adobe/aem-cli`
 1. Start AEM Proxy: `aem up` (opens your browser at `http://localhost:3000`)
 1. Open the `eds-react-starter-kit` directory in your favorite IDE and start coding :)
+
+## Local development - React
+
+For development mode, run the following command,
+```sh
+npm run start
+```
+
+Before commiting files, run the following command to generate minified files,
+
+```sh
+npm run build
+```
+
+Note: Commit the minified files.
+
+## Creating Create Components:
+
+To create components,
+
+```sh
+npm run add
+```
+
+or
+
+```sh
+npm run add <component-name>
+```
+
+eg, `npm run add address-form`
+
+
+ - <component-name> - should be same as `block` name.
+
+
+## Supports
+1. pub/sub support to pass data between react app.
+1. i18n support. (refer the sample docs and sheets for reference)
+1. TypeScript to write react components.
+1. Plop is used to generate React base component.
