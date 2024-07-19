@@ -1,4 +1,4 @@
-/* eslint-disable import/no-unresolved, no-console */
+/* eslint-disable import/no-unresolved, import/no-extraneous-dependencies, no-console */
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
@@ -8,7 +8,7 @@ const copyfiles = require('copyfiles');
 // eslint-disable-next-line import/no-extraneous-dependencies
 var glob = require('glob');
 const path = require('path');
-const multipleHtmlPlugins = require('./htmlWebpackPlugins');
+const multipleHtmlPlugins = require('./htmlWebpackPlugins.cjs');
 // const components = require('./components.json');
 
 // Plugin to copy  dist files to EDS location
@@ -124,7 +124,7 @@ module.exports = {
     ],
   ],
   resolve: {
-    extensions: ['.js', '.jsx', '.tsx', '.ts', '.cjs'],
+    extensions: ['.js', '.jsx', '.tsx', '.ts'],
   },
   optimization: {
     // runtimeChunk: {

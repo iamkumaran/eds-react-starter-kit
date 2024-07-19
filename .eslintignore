@@ -3,4 +3,9 @@ dist
 node_modules
 plop-templates
 static
-postcss.config.js
+postcss.config.cjs
+.github
+fonts
+icons
+static
+scripts/vendor.js
