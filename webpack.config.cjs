@@ -1,15 +1,14 @@
-/* eslint-disable no-console */
+/* eslint-disable import/no-unresolved, import/no-extraneous-dependencies, no-console */
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const TerserPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const copyfiles = require('copyfiles');
 // eslint-disable-next-line import/no-extraneous-dependencies
 var glob = require('glob');
 const path = require('path');
-const multipleHtmlPlugins = require('./htmlWebpackPlugins');
+const multipleHtmlPlugins = require('./htmlWebpackPlugins.cjs');
 // const components = require('./components.json');
 
 // Plugin to copy  dist files to EDS location
@@ -33,6 +32,7 @@ class CopyFiles {
             './dist/**/*.html',
             './dist/styles/**/*',
             './dist/**/*.hot-update.js',
+            './dist/**/*.hot-update.mjs',
             './dist/**/*.hot-update.json',
           ],
           verbose: true,
@@ -69,9 +69,17 @@ module.exports = {
     return obj;
   }, {}),
   devtool: false,
+  experiments: {
+    outputModule: true,
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name]/[name].js',
+    // libraryTarget: 'window',
+    // libraryExport: 'default',
+    library: {
+      type: 'module',
+    },
   },
   module: {
     rules: [
@@ -98,24 +106,31 @@ module.exports = {
     }),
     ...multipleHtmlPlugins,
     new CopyFiles(),
-    new webpack.BannerPlugin({
-      banner: opt => {
-        // append messages to JS and CSS file
-        if (opt.filename.endsWith('.css')) {
-          return '/* stylelint-disable */';
-        }
-        if (opt.filename.endsWith('.js')) {
-          return '/* eslint-disable */';
-        }
-      },
-      raw: true,
-      stage: webpack.Compilation.PROCESS_ASSETS_STAGE_REPORT,
-    }),
+    ...[
+      process.env?.WEBPACK_SERVE !== 'true' &&
+        new webpack.BannerPlugin({
+          banner: opt => {
+            // append messages to JS and CSS file
+            if (opt.filename.endsWith('.css')) {
+              return '/* stylelint-disable */';
+            }
+            if (opt.filename.endsWith('.js')) {
+              return '/* eslint-disable */';
+            }
+          },
+          raw: true,
+          stage: webpack.Compilation.PROCESS_ASSETS_STAGE_REPORT,
+        }),
+    ],
   ],
   resolve: {
     extensions: ['.js', '.jsx', '.tsx', '.ts'],
   },
   optimization: {
+    // runtimeChunk: {
+    //   name: 'vendor',
+    // },
+    // removeEmptyChunks: true,
     // check dev or production mode
     minimize: process.env?.WEBPACK_SERVE !== 'true',
     minimizer: [
@@ -151,12 +166,6 @@ module.exports = {
     chunkIds: 'named',
     splitChunks: {
       cacheGroups: {
-        // commons: {
-        //   chunks: 'initial',
-        //   minChunks: 2,
-        //   maxInitialRequests: 5, // The default limit is too small to showcase the effect
-        //   minSize: 0, // This is example is too small to create commons chunks
-        // },
         vendor: {
           test: /node_modules/,
           chunks: 'initial',
@@ -171,12 +180,15 @@ module.exports = {
     host: 'localhost', // where to run
     historyApiFallback: true,
     port: 4200, // given port to exec. app
-    open: true, // open new tab
+    // open: true, // open new tab
     // hot: true, // Enable webpack's Hot Module Replacement
     watchFiles: ['/react-app/**/*'],
     devMiddleware: {
       // publicPath: '/dist/',
       writeToDisk: true,
     },
+  },
+  watchOptions: {
+    aggregateTimeout: 600,
   },
 };
