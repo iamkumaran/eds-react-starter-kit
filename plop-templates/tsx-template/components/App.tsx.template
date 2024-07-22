@@ -1,10 +1,6 @@
 import React, { FC } from 'react';
 
-interface AppProps {
-  elem: HTMLElement;
-}
-
-const App: FC<AppProps> = ({ elem }) => {
+const App: FC = () => {
   return <h1>Your new Component <i>{{name}}</i> is here.</h1>;
 };
 

@@ -123,7 +123,23 @@ module.exports = {
         }),
     ],
   ],
+  externalsType: 'module',
+  externals: [
+    // Don't bundle EDS JS files.
+    function ({ request }, callback) {
+      if (request.includes('/scripts/aem')) {
+        // Externalize to a commonjs module using the request path
+        return callback(null, '/scripts/aem.js');
+      }
+
+      // Continue without externalizing the import
+      callback();
+    },
+  ],
   resolve: {
+    // alias: {
+    //   '@scripts/aem': `${SOURCE_ROOT}/scripts/aem.js`,
+    // },
     extensions: ['.js', '.jsx', '.tsx', '.ts'],
   },
   optimization: {
@@ -138,7 +154,7 @@ module.exports = {
         terserOptions: {
           mangle: true,
           compress: {
-            drop_console: true,
+            drop_console: ['log', 'info', 'warn', 'debug'],
           },
         },
       }),
@@ -170,7 +186,6 @@ module.exports = {
           test: /node_modules/,
           chunks: 'initial',
           name: 'vendor',
-          priority: 10,
           enforce: true,
         },
       },
@@ -178,11 +193,11 @@ module.exports = {
   },
   devServer: {
     host: 'localhost', // where to run
-    historyApiFallback: true,
+    // historyApiFallback: true,
     port: 4200, // given port to exec. app
     // open: true, // open new tab
-    // hot: true, // Enable webpack's Hot Module Replacement
-    watchFiles: ['/react-app/**/*'],
+    hot: false, // Enable webpack's Hot Module Replacement
+    watchFiles: ['./react-app/**/*'],
     devMiddleware: {
       // publicPath: '/dist/',
       writeToDisk: true,
