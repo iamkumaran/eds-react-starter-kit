@@ -105,7 +105,8 @@ module.exports = {
       filename: '[name]/[name].css',
     }),
     ...multipleHtmlPlugins,
-    new CopyFiles(),
+    // don't copy files when running `npm run analyze`
+    ...[process.env.npm_lifecycle_event !== 'analyze' && new CopyFiles()],
     ...[
       process.env?.WEBPACK_SERVE !== 'true' &&
         new webpack.BannerPlugin({

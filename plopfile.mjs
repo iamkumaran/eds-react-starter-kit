@@ -1,6 +1,8 @@
 // import fs from 'fs';
 
 export default function (plop) {
+  const useTypeScript = false;
+  const ext = useTypeScript ? 'tsx' : 'jsx';
   // controller generator
   plop.setGenerator('controller', {
     description: 'Create a React Component',
@@ -10,27 +12,27 @@ export default function (plop) {
         name: 'name',
         message: 'enter component name (should be same as `block` name)',
       },
-      {
-        type: 'confirm',
-        name: 'useTypeScript',
-        message: 'Use TypeScript (Recommended)',
-      },
+      // {
+      //   type: 'confirm',
+      //   name: 'useTypeScript',
+      //   message: 'Use TypeScript (Recommended)',
+      // },
     ],
     actions: [
       {
         type: 'add',
-        path: 'react-app/app/{{name}}/index.tsx',
-        templateFile: 'plop-templates/tsx-template/index.tsx.template',
+        path: `react-app/app/{{name}}/index.${ext}`,
+        templateFile: `plop-templates/${ext}-template/index.${ext}.template`,
       },
       {
         type: 'add',
         path: 'react-app/app/{{name}}/index.css',
-        templateFile: 'plop-templates/tsx-template/index.css.template',
+        templateFile: `plop-templates/${ext}-template/index.css.template`,
       },
       {
         type: 'add',
-        path: 'react-app/app/{{name}}/components/App.tsx',
-        templateFile: 'plop-templates/tsx-template/components/App.tsx.template',
+        path: `react-app/app/{{name}}/components/App.${ext}`,
+        templateFile: `plop-templates/${ext}-template/components/App.${ext}.template`,
       },
       // function customAction(answers) {
       //   const { name } = answers;
