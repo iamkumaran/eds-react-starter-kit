@@ -1,0 +1,140 @@
+.demo-form-excel {
+  /* Form element setup */
+  form {
+    width: 300px;
+    margin: 2rem 0;
+  }
+
+  legend {
+    font-weight: 400;
+  }
+
+  legend,
+  .label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+
+  fieldset {
+    margin: 0 0 1rem;
+    padding: 0;
+    border: none;
+
+    label {
+      display: block;
+    }
+  }
+
+  textarea {
+    max-width: 300px;
+    height: 100px;
+  }
+
+  input[type='text'],
+  select {
+    height: 34px;
+    font-size: 0.875rem;
+  }
+
+  input[type='text'],
+  textarea,
+  select {
+    display: block;
+    padding: 0.5rem;
+    width: 100%;
+    background-color: white;
+    border-radius: 0.25rem;
+    border: 1px solid #e5e5e5;
+    outline: none;
+
+    /* List some properties that might change */
+    transition-property: none;
+    transition-duration: none;
+
+    &:focus {
+      border-color: #ef7ead;
+    }
+  }
+
+  input[type='checkbox'],
+  input[type='radio'] {
+    position: relative;
+    top: 5px;
+    width: 22px;
+    height: 22px;
+    margin: 0 0.5rem;
+    background-color: white;
+    border: 1px solid #e5e5e5;
+    outline: none;
+    appearance: none;
+
+    /* List some properties that might change */
+    transition-property: none;
+    transition-duration: none;
+  }
+
+  input[type='checkbox'] {
+    border-radius: 5px;
+
+    :checked {
+      background-color: #ef7ead;
+      border: none;
+
+      ::after {
+        display: block;
+        content: '';
+        height: 4px;
+        width: 10px;
+        border-bottom: 3px solid #fff;
+        border-left: 3px solid #fff;
+        transform: translate(5px, 6px) rotate(-45deg) scale(1);
+      }
+    }
+  }
+
+  input[type='radio'] {
+    border-radius: 50%;
+
+    &:checked {
+      border-width: 5px;
+      border-color: white;
+      background-color: #ef7ead;
+    }
+  }
+
+  button {
+    display: block;
+    margin: 3em auto;
+    padding: 0.5rem 2rem;
+    font-size: 125%;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    background-color: #ef7ead;
+    outline: none;
+    box-shadow: 0 0.4rem 0.1rem -0.3rem #0000001a;
+
+    /* We'll talk about this next */
+    transform: perspective(300px) scale(0.95) translateZ(0);
+    transform-style: preserve-3d;
+
+    /* List the properties that you're looking to transition.
+     Try not to use 'all' */
+    transition-property: none;
+
+    /* This applies to all of the above properties */
+    transition-duration: none;
+
+    &:hover {
+      cursor: pointer;
+      background-color: #ff96c8;
+      box-shadow: 0 0 0 0 #000;
+      transform: scale(1.1) rotateX(0);
+    }
+
+    &:active {
+      background-color: #ef7ead;
+      transform: scale(1.05) rotateX(-10deg);
+    }
+  }
+}

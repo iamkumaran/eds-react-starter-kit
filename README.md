@@ -32,13 +32,13 @@ For development mode, run the following command,
 npm run start
 ```
 
-Before commiting files, run the following command to generate minified files,
+Before committing files, run the following command to generate minified files,
 
 ```sh
 npm run build
 ```
 
-Note: Commit the minified files.
+Note: Commit the minified files from the `/blocks/` folder.
 
 ## Creating Create Components:
 
@@ -60,8 +60,12 @@ eg, `npm run add address-form`
  - `component-name` - should be same as `block` name.
 
 
-## Supports
+## Feature & Supports
 1. pub/sub support to pass data between react app.
 1. i18n support. (refer the sample docs and sheets for reference)
-1. TypeScript to write react components.
+1. TypeScript to write React components.
 1. Plop is used to generate React base component.
+
+## Upcoming enhancements
+1. Add Cypress
+1. 
