@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { getCall } from '../baseUtils';
+import { useState } from 'react';
+// import { getCall } from '../baseUtils';
 
 // Define type for translations
 type Translations = {
@@ -15,6 +15,8 @@ declare global {
 
 const useI18n = (language: string = 'en') => {
   // // const [translations, setTranslations] = useState<Translations>({});
+
+  // Add your Logic to get i18n data
 
   // useEffect(() => {
   //   setTranslations(window.i18n);

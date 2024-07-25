@@ -93,28 +93,28 @@ async function loadEager(doc) {
   }
 }
 
-const geti18nData = async () => {
-  const language = 'en';
-  try {
-    const response = await fetch(`/content.json?sheet=${language}`);
-    const data = await response.json();
-    if (data?.data.length) {
-      // transform data to object
-      const obj = {};
-      data.data.forEach(item => {
-        obj[item.key] = item.value;
-      });
-      window.i18n = obj;
-      // emit the i18n `obj` to other components
-      const event = new CustomEvent('i18nReady', { detail: obj });
-      window.dispatchEvent(event);
-    }
-  } catch (error) {
-    return {
-      error,
-    };
-  }
-};
+// const geti18nData = async () => {
+//   const language = 'en';
+//   try {
+//     const response = await fetch(`/content.json?sheet=${language}`);
+//     const data = await response.json();
+//     if (data?.data.length) {
+//       // transform data to object
+//       const obj = {};
+//       data.data.forEach(item => {
+//         obj[item.key] = item.value;
+//       });
+//       window.i18n = obj;
+//       // emit the i18n `obj` to other components
+//       const event = new CustomEvent('i18nReady', { detail: obj });
+//       window.dispatchEvent(event);
+//     }
+//   } catch (error) {
+//     return {
+//       error,
+//     };
+//   }
+// };
 
 /**
  * Loads everything that doesn't need to be delayed.
@@ -123,7 +123,7 @@ const geti18nData = async () => {
 async function loadLazy(doc) {
   const main = doc.querySelector('main');
 
-  setTimeout(() => geti18nData(), 0);
+  // setTimeout(() => geti18nData(), 0);
 
   await loadBlocks(main);
 

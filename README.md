@@ -64,8 +64,9 @@ eg, `npm run add address-form`
 1. pub/sub support to pass data between react app.
 1. i18n support. (refer the sample docs and sheets for reference)
 1. TypeScript to write React components.
-1. Plop is used to generate React base component.
+1. Plop is used to generate React base component. Supports TypeScript or JavaScript.
+1. Chunk option are enabled, so that `dynamic import` or `React.Lazy` works out of the box.
+1. 
 
 ## Upcoming enhancements
 1. Add Cypress
-1. 

@@ -4,8 +4,8 @@ import useI18n from '../../../utils/hooks/useI18n';
 import Text from '../../../library/Form/Text/Text';
 import Checkbox from '../../../library/Form/Checkbox/Checkbox';
 import Radio from '../../../library/Form/Radio/Radio';
-// import TextArea from '../../../library/Form/TextArea/TextArea';
-const TextArea = lazy(() => import(/* webpackChunkName: "TextAreaChunk" */ '../../../library/Form/TextArea/TextArea'));
+import TextArea from '../../../library/Form/TextArea/TextArea';
+// const TextArea = lazy(() => import(/* webpackChunkName: "TextAreaChunk" */ '../../../library/Form/TextArea/TextArea'));
 
 // Define types for state
 type FormState = {
@@ -30,8 +30,6 @@ const App: FC = () => {
   const [formFields, setFormFields] = useState([]);
 
   const { t } = useI18n();
-
-  // console.log('ttttt =>', t('firstName'));
 
   useEffect(() => {
     getCall('/form.json').then(respData => {
