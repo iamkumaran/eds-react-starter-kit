@@ -1,2 +1,0 @@
-/* eslint-disable */
-(self.webpackChunk_adobe_aem_boilerplate=self.webpackChunk_adobe_aem_boilerplate||[]).push([["TextAreaChunk"],{389:(e,l,a)=>{a.r(l),a.d(l,{default:()=>r});var n=a(540);const r=({label:e,name:l,placeholder:a=null,handler:r,required:t=!0})=>n.createElement("fieldset",null,n.createElement("label",null,n.createElement("span",{className:"label"},e),n.createElement("textarea",{name:l,placeholder:a,onChange:r,required:t})))}}]);
