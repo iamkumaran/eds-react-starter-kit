@@ -5,11 +5,9 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const copyfiles = require('copyfiles');
-// eslint-disable-next-line import/no-extraneous-dependencies
 var glob = require('glob');
 const path = require('path');
 const multipleHtmlPlugins = require('./htmlWebpackPlugins.cjs');
-// const components = require('./components.json');
 
 // Plugin to copy  dist files to EDS location
 class CopyFiles {
@@ -20,7 +18,6 @@ class CopyFiles {
     //   return null;
     // }
     compiler.hooks.done.tap('Copy', () => {
-      // console.log('compilation ===>');
       // copy component files
       copyfiles(
         ['./dist/**/*', './blocks'],
@@ -34,6 +31,7 @@ class CopyFiles {
             './dist/**/*.hot-update.js',
             './dist/**/*.hot-update.mjs',
             './dist/**/*.hot-update.json',
+            './dist/chunks/**/*',
           ],
           verbose: true,
         },
@@ -42,6 +40,13 @@ class CopyFiles {
       // copy vendor file
       copyfiles(
         ['./dist/vendor/vendor.js', './scripts'],
+        {
+          up: 2,
+        },
+        err => err && console.error(err)
+      );
+      copyfiles(
+        ['./dist/chunks/**/*', './scripts/chunks'],
         {
           up: 2,
         },
@@ -75,8 +80,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name]/[name].js',
-    // libraryTarget: 'window',
-    // libraryExport: 'default',
+    chunkFilename: './chunks/[name].js',
+    publicPath: './scripts/', // to tell webpack to load "chunk" file from this path.
     library: {
       type: 'module',
     },
@@ -103,6 +108,7 @@ module.exports = {
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name]/[name].css',
+      chunkFilename: './chunks/[name].css',
     }),
     ...multipleHtmlPlugins,
     // don't copy files when running `npm run analyze`
@@ -138,16 +144,9 @@ module.exports = {
     },
   ],
   resolve: {
-    // alias: {
-    //   '@scripts/aem': `${SOURCE_ROOT}/scripts/aem.js`,
-    // },
     extensions: ['.js', '.jsx', '.tsx', '.ts'],
   },
   optimization: {
-    // runtimeChunk: {
-    //   name: 'vendor',
-    // },
-    // removeEmptyChunks: true,
     // check dev or production mode
     minimize: process.env?.WEBPACK_SERVE !== 'true',
     minimizer: [
@@ -173,7 +172,6 @@ module.exports = {
               discardEmpty: true,
               mergeRules: true,
               normalizeCharset: true,
-              // reduceInitial: true, // This is since IE11 does not support the value Initial
               svgo: true,
             },
           ],

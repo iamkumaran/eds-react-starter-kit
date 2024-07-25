@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, lazy, Suspense } from 'react';
 import { createOptimizedPicture } from '../../../../scripts/aem';
 interface AppProps {
   rootElem: HTMLElement;

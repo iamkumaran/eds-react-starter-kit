@@ -1,15 +1,24 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import { getCall } from '../../../utils/baseUtils';
 import useI18n from '../../../utils/hooks/useI18n';
 import Text from '../../../library/Form/Text/Text';
 import Checkbox from '../../../library/Form/Checkbox/Checkbox';
 import Radio from '../../../library/Form/Radio/Radio';
+// import TextArea from '../../../library/Form/TextArea/TextArea';
+const TextArea = lazy(() => import(/* webpackChunkName: "TextAreaChunk" */ '../../../library/Form/TextArea/TextArea'));
 
 // Define types for state
 type FormState = {
   firstName: string;
   lastName: string;
 };
+
+interface FieldMap {
+  Name: string;
+  Type: string;
+  Label: string;
+  Placeholder: string;
+}
 
 const App: FC = () => {
   // Initialize state with types
@@ -63,7 +72,7 @@ const App: FC = () => {
       {formFields.length > 0 &&
         formFields.map(fieldGroup =>
           fieldGroup.length === 1 ? (
-            fieldGroup.map((field: { Name: string; Type: string; Label: string; Placeholder: string }) => (
+            fieldGroup.map((field: FieldMap) => (
               <>
                 {field.Type === 'text' && (
                   <Text
@@ -73,22 +82,42 @@ const App: FC = () => {
                     handler={handleInputChange}
                   />
                 )}
+                {field.Type === 'textarea' && (
+                  <Suspense fallback={<p>Loading...</p>}>
+                    <TextArea
+                      label={t(field.Label)}
+                      name={field.Name}
+                      placeholder={field.Placeholder}
+                      handler={handleInputChange}
+                    />
+                  </Suspense>
+                )}
               </>
             ))
           ) : (
             <>
               <fieldset>
                 <legend>{fieldGroup[0].Label}</legend>
-                {fieldGroup.map((field: { Name: string; Type: string; Label: string; Placeholder: string }) => (
-                  <>
-                    {field.Type === 'check' && (
-                      <Checkbox label={t(field.Label)} name={field.Name} handler={handleInputChange} />
-                    )}
-                    {field.Type === 'radio' && (
-                      <Radio label={t(field.Label)} name={field.Name} handler={handleInputChange} />
-                    )}
-                  </>
-                ))}
+                {fieldGroup[0].Name !== 'select' &&
+                  fieldGroup.map((field: FieldMap) => (
+                    <>
+                      {field.Type === 'check' && (
+                        <Checkbox label={t(field.Label)} name={field.Name} handler={handleInputChange} />
+                      )}
+                      {field.Type === 'radio' && (
+                        <Radio label={t(field.Label)} name={field.Name} handler={handleInputChange} />
+                      )}
+                    </>
+                  ))}
+                {fieldGroup[0].Type === 'select' && (
+                  <select>
+                    {fieldGroup.map((field: FieldMap, index: Number) => (
+                      <Fragment key={field.Label + field.Name}>
+                        {index !== 0 && <option value={field.Name}>{field.Label}</option>}
+                      </Fragment>
+                    ))}
+                  </select>
+                )}
               </fieldset>
             </>
           )
