@@ -3,7 +3,6 @@ const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const copyfiles = require('copyfiles');
 var glob = require('glob');
 const path = require('path');
@@ -78,6 +77,7 @@ module.exports = {
     outputModule: true,
   },
   output: {
+    clean: true,
     path: path.resolve(__dirname, 'dist'),
     filename: '[name]/[name].js',
     chunkFilename: './chunks/[name].js',
@@ -97,6 +97,9 @@ module.exports = {
         test: /\.jsx?$/, // apply to all JS/JSX files
         exclude: /node_modules/, // exclude all files on node_modules
         loader: 'babel-loader',
+        resolve: {
+          fullySpecified: false,
+        },
       },
       {
         test: /\.(sa|sc|c)ss$/, // styles files
@@ -105,7 +108,6 @@ module.exports = {
     ],
   },
   plugins: [
-    new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name]/[name].css',
       chunkFilename: './chunks/[name].css',
